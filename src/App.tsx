@@ -1,24 +1,25 @@
-import React from 'react';
-import logo from './logo.svg';
+
+import {
+  Components
+} from '@reef-chain/react-lib';
+import {
+  extension
+} from '@reef-chain/util-lib'
+
 import './App.css';
 
+export const availableWallOptions = [
+  Components.walletSelectorOptions[extension.REEF_EXTENSION_IDENT],
+  Components.walletSelectorOptions[extension.REEF_WALLET_CONNECT_IDENT],
+]
 function App() {
+  
   return (
     <div className="App">
-      <header className="App-header">
-        <img src={logo} className="App-logo" alt="logo" />
-        <p>
-          Edit <code>src/App.tsx</code> and save to reload.
-        </p>
-        <a
-          className="App-link"
-          href="https://reactjs.org"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Learn React
-        </a>
-      </header>
+        <Components.WalletSelector 
+          availableExtensions={availableWallOptions}
+          onExtensionSelect={(ext: string) => console.log({ext})}
+        />
     </div>
   );
 }
