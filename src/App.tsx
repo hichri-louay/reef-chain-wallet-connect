@@ -38,7 +38,8 @@ function App() {
   useEffect(()=>{
     setAccounts(signers);
     setSelectedSigner(selectedReefSigner);
-    console.log({signers})
+    
+    console.log({signers, selectedReefSigner})
     if(signers?.length && signers?.indexOf(selectedReefSigner!)==-1){
       reefState.setSelectedAddress(signers[0].address)
       console.log({selectedReefSigner})    }
@@ -58,15 +59,26 @@ function App() {
     setDropdownOpen(!dropdownOpen);
   }
 
+  const handleSelectWallet = (index) => {
+    reefState.setSelectedAddress(signers[index].address)
+  }
+
   return (
     <div className="App">
       <nav className="navbar">
         <h1>Reef Chain Wallet</h1>
+        
         {
-          selectedSigner && (
+          !!signers && (
             <div className="selected-wallet">
-              <span>{selectedSigner.name}</span>
-              <span>{selectedSigner.address}</span>
+              {signers.map((signer, index) => (
+        <div key={index}>
+          <span>{signer.name}</span>
+          <span style={{ 'marginLeft': '20px'}}> {signer.address}</span>
+          <button style={{ 'marginLeft': '20px'}} onClick={() => handleSelectWallet(index)}>Select Wallet</button>
+        </div>
+      ))}
+
             </div>
           )
         }
@@ -94,6 +106,15 @@ function App() {
           )}
             </div>
             
+          )
+        }
+
+
+        {
+          !!selectedSigner && (
+            <div>
+              <p>Address wallet selected is : {selectedSigner.address}</p>
+            </div>
           )
         }
         
