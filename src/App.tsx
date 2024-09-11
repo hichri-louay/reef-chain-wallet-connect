@@ -9,8 +9,8 @@ import {
   extension as reefExt
 } from '@reef-chain/util-lib';
 import NetworkSwitch, { setSwitching } from './context/NetworkSwitch';
-
-
+import useWcPreloader from './hooks/useWcPreloader';
+import { connectWc } from './utils/walletConnect';
 import './App.css';
 import useConnectedWallet from './hooks/useConnectedWallet';
 import { network as nw } from '@reef-chain/util-lib';
@@ -21,14 +21,37 @@ export const availableWallOptions = [
 ]
 
 export const getIpfsGatewayUrl = (hash: string): string => `https://reef.infura-ipfs.io/ipfs/${hash}`;
+export const connectWalletConnect = async(ident:string,setSelExtensionName:any,setWcPreloader:any)=>{
+  setWcPreloader({
+    value:true,
+    message:"initializing mobile app connection"
+  });
+  setSelExtensionName(undefined); //force setting this to different value from the ident initially or else it doesn't call useInitReefState hook
 
+  const response:reefExt.WcConnection | undefined = await connectWc(setWcPreloader)
+  console.log({response})
+  console.log('connectWalletConnect',response);
+      if (response) {
+        reefExt.injectWcAsExtension(response, { name: reefExt.REEF_WALLET_CONNECT_IDENT, version: "1.0.0" });
+        setSelExtensionName(ident);
+        // display preloader 
+        setWcPreloader({
+          value:true,
+          message:"wait while we are establishing a connection"
+        });
+      } else {
+        // if proposal expired, recursively call
+        await connectWalletConnect(ident,setSelExtensionName,setWcPreloader);
+      }
+    }
 
 function App() {
   const {selExtensionName,setSelExtensionName} = useConnectedWallet();
   const [accounts,setAccounts] = useState<ReefSigner[]>([]);
   const [selectedSigner,setSelectedSigner] = useState<ReefSigner | undefined>(undefined);
   const [dropdownOpen, setDropdownOpen] = useState<Boolean>(false);
-  const [userBalance, setUserBalance] = useState<BigInt | undefined>(0)
+  const [userBalance, setUserBalance] = useState<BigInt | undefined>(BigInt(0))
+  const {loading:wcPreloader,setLoading:setWcPreloader} = useWcPreloader()
   const {
     loading, error, signers, selectedReefSigner, network, provider, reefState, extension
   } = hooks.useInitReefStateExtension(
@@ -58,7 +81,12 @@ function App() {
   const appAvailableNetworks = [nw.AVAILABLE_NETWORKS.mainnet, nw.AVAILABLE_NETWORKS.testnet];
   const onExtensionSelected = async(ident: string) => {
     console.log('extension changed to ', ident);
-    setSelExtensionName(ident);
+    if(ident === reefExt.REEF_WALLET_CONNECT_IDENT) {
+      await connectWalletConnect(ident, setSelExtensionName, setWcPreloader)
+    } else {
+      setSelExtensionName(ident);
+    }
+    
   }
   const convertToReadableFormat = (value) => {
     const decimalValue = BigInt(!!value ? value : 0);
