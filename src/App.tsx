@@ -8,10 +8,12 @@ import {
 import {
   extension as reefExt
 } from '@reef-chain/util-lib';
+import NetworkSwitch, { setSwitching } from './context/NetworkSwitch';
 
 
 import './App.css';
 import useConnectedWallet from './hooks/useConnectedWallet';
+import { network as nw } from '@reef-chain/util-lib';
 
 export const availableWallOptions = [
   Components.walletSelectorOptions[reefExt.REEF_EXTENSION_IDENT],
@@ -26,30 +28,42 @@ function App() {
   const [accounts,setAccounts] = useState<ReefSigner[]>([]);
   const [selectedSigner,setSelectedSigner] = useState<ReefSigner | undefined>(undefined);
   const [dropdownOpen, setDropdownOpen] = useState<Boolean>(false);
+  const [userBalance, setUserBalance] = useState<BigInt | undefined>(0)
   const {
     loading, error, signers, selectedReefSigner, network, provider, reefState, extension
   } = hooks.useInitReefStateExtension(
     'lhichri app', selExtensionName, { ipfsHashResolverFn: getIpfsGatewayUrl },
   );
+  const [isNetworkSwitching, setNetworkSwitching] = useState(false);
+  const networkSwitch = {
+    isSwitching: isNetworkSwitching,
+    setSwitching: (value: boolean) => setSwitching(value, setNetworkSwitching),
+  };
   useEffect(()=>{
     setAccounts([]);
     setSelectedSigner(undefined);
+    setUserBalance(undefined)
+    
   },[selExtensionName])
   useEffect(()=>{
     setAccounts(signers);
     setSelectedSigner(selectedReefSigner);
-    
-    console.log({signers, selectedReefSigner})
+    setUserBalance(convertToReadableFormat(selectedReefSigner?.balance._hex))
+    console.log({signers, balance: selectedReefSigner?.balance, network})
     if(signers?.length && signers?.indexOf(selectedReefSigner!)==-1){
       reefState.setSelectedAddress(signers[0].address)
+      setUserBalance(convertToReadableFormat(selectedReefSigner?.balance._hex))
       console.log({selectedReefSigner})    }
   },[selectedReefSigner,signers])
-
+  const appAvailableNetworks = [nw.AVAILABLE_NETWORKS.mainnet, nw.AVAILABLE_NETWORKS.testnet];
   const onExtensionSelected = async(ident: string) => {
     console.log('extension changed to ', ident);
     setSelExtensionName(ident);
   }
-
+  const convertToReadableFormat = (value) => {
+    const decimalValue = BigInt(!!value ? value : 0);
+    return decimalValue /BigInt(Math.pow(10, 18));
+  };
   const handleDropdownItemClick = (extension: string) => {
     onExtensionSelected(extension);
   };
@@ -61,12 +75,26 @@ function App() {
 
   const handleSelectWallet = (index) => {
     reefState.setSelectedAddress(signers[index].address)
+    setUserBalance(convertToReadableFormat(selectedReefSigner?.balance._hex))
   }
 
+  const handleNetworkChange = (key : string) => {
+    console.log('network changed to ', key);
+    const networkToChange = appAvailableNetworks.find((network) => network.name === key);
+    reefState.setSelectedNetwork(networkToChange!);
+  }
+
+ 
+
   return (
-    <div className="App">
+    <NetworkSwitch.Provider value={networkSwitch}>
+      <div className="App">
       <nav className="navbar">
         <h1>Reef Chain Wallet</h1>
+        <div>
+          <button onClick={() => handleNetworkChange('mainnet')}>Mainnet</button>
+          <button onClick={() => handleNetworkChange('testnet')}>Testnet</button>
+        </div>
         
         {
           !!signers && (
@@ -114,6 +142,7 @@ function App() {
           !!selectedSigner && (
             <div>
               <p>Address wallet selected is : {selectedSigner.address}</p>
+              <p>Balance : {userBalance?.toString()}</p>
             </div>
           )
         }
@@ -123,6 +152,8 @@ function App() {
         
       
     </div>
+    </NetworkSwitch.Provider>
+    
   );
 }
 
