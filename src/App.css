@@ -1,0 +1,138 @@
+.connect-button {
+    color: black;
+    background-color: transparent;
+
+}
+
+.connect-button:hover {
+    color: rgb(187, 0, 187);
+    background-color: transparent;
+}
+
+
+
+.account-selector-box--nav {
+    display: flex;
+}
+
+
+.nav-account {
+    background: linear-gradient( 0deg, rgb(250 248 255) 0%, rgb(217 211 235) 100%);
+    height: 2.5em;
+    background-color: #f3f0f8;
+    box-shadow: 0.2em 0.2em 1.5em #e2def1;
+    padding: 0;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+    overflow: hidden;
+    border-radius: 99px;
+    display: flex;
+}
+
+
+.nav-account__balance {
+    padding-top: 1px;
+}
+
+
+/* Container for network buttons */
+.network-switch-container {
+    display: flex;
+    width: 200px; /* Adjust width as needed */
+    height: 34px;
+    border-radius: 34px;
+    overflow: hidden;
+    background-color: #f0f0f0; /* Background color for the switch container */
+  }
+  
+  /* Individual network button styles */
+  .network-button {
+    flex: 1;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    cursor: pointer;
+    border: none;
+    outline: none;
+    height: 100%;
+    background-color: #742cb2; /* Default background color */
+    color: white;
+    font-weight: bold;
+    transition: background-color 0.3s ease;
+  }
+  
+  /* Background color for the selected network */
+  .network-button.selected {
+    background-color: #ffffff; /* Background color when selected */
+    color: #742cb2; /* Text color for selected network */
+  }
+  
+  /* Margin for buttons */
+  .network-button:first-child {
+    margin-right: -1px; /* Remove double border effect */
+  }
+  
+  .network-button:last-child {
+    margin-left: -1px; /* Remove double border effect */
+  }
+  
+  
+  
+  .network-switching {
+    background: var(--bg);
+    position: fixed;
+    z-index: 10000;
+    width: 100%;
+    height: 100vh;
+    top: 0;
+    left: 0;
+    display: flex;
+    flex-flow: column nowrap;
+    justify-content: center;
+    align-items: center;
+  }
+  
+  .network-switching.enter {
+    opacity: 0;
+    transform: scale(0.8);
+  }
+  
+  .network-switching.enter-active,
+  .network-switching.enter-done,
+  .network-switching.exit {
+    opacity: 1;
+    transform: none;
+  }
+  
+  .network-switching.exit-active {
+    opacity: 0;
+    transform: scale(0.8);
+  }
+  
+  .network-switching.exit-active {
+    transition: all 0.4s 1.1s;
+  }
+  
+  .network-switching .uik-text {
+    margin-top: 25px;
+    animation: network-switching-text 0.3s;
+  }
+  
+  @keyframes network-switching-text {
+    from {
+      opacity: 0;
+      transform: scaleY(0.5);
+    }
+  }
+  
+  .network-switching .uik-icon {
+    width: 50px;
+    color: var(--success);
+    animation: network-switched 0.3s;
+  }
+  
+  @keyframes network-switched {
+    from {
+      transform: scale(0.6);
+    }
+  }
