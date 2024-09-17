@@ -238,19 +238,6 @@ function App() {
                     
                   )
                 }
-
-              {/*
-                !!signers && (
-                  <Uik.AccountSelector
-                  selExtName={selExtensionName}
-                  availableExtensions={availableWallOptions}
-                  availableNetworks={['mainnet', 'testnet']}
-                  isOpen={true}
-                  accounts={accounts}
-                  selectedAccount={reefState.selectedAccount}>
-                  </Uik.AccountSelector>
-                )
-                */}
               {
                 !!network && (
                   <>
@@ -303,89 +290,6 @@ function App() {
                 )
               }
 
-
-              {
-                /*
-                <Uik.AccountSelector
-                isOpen={true}
-                availableNetworks={['mainnet', 'testnet']}
-                selectedNetwork={'mainnet'}
-                showSnapOptions={true}
-              ></Uik.AccountSelector>
-                */
-              }
-              
-              {
-                /*
-                <nav className="navbar">
-        <h1>Reef Chain Wallet</h1>
-        <div>
-          <button onClick={() => handleNetworkChange('mainnet')}>Mainnet</button>
-          <button onClick={() => handleNetworkChange('testnet')}>Testnet</button>
-        </div>
-                */
-              }
-      
-        
-        {/*
-          !!signers && (
-            <div className="selected-wallet">
-              {signers.map((signer, index) => (
-        <div key={index}>
-          <span>{signer.name}</span>
-          <span style={{ 'marginLeft': '20px'}}> {signer.address}</span>
-          <button style={{ 'marginLeft': '20px'}} onClick={() => handleSelectWallet(index)}>Select Wallet</button>
-        </div>
-      ))}
-
-            </div>
-          )
-              */}
-        {/*
-          !selectedSigner && (
-            <div>
-              <button className="connect-button" onClick={handleConnectClick}>
-            Connect
-            </button>
-            {dropdownOpen && (
-            <div className="dropdown-menu">
-              <button
-                className="dropdown-item"
-                onClick={() => handleDropdownItemClick(reefExt.REEF_EXTENSION_IDENT)}
-              >
-                Reef Browser Wallet
-              </button>
-              <button
-                className="dropdown-item"
-                onClick={() => handleDropdownItemClick(reefExt.REEF_WALLET_CONNECT_IDENT)}
-              >
-                Wallet Connect
-              </button>
-            </div>
-          )}
-            </div>
-            
-          )
-            */}
-
-
-        {/*
-          !!selectedSigner && (
-            <div>
-              <p>Address wallet selected is : {selectedSigner.address}</p>
-              <p>Balance : {userBalance?.toString()}</p>
-            </div>
-          )
-          */}
-        
-        {
-          /*
-          </nav>
-        
-      
-    
-          */
-        }
      
     </NetworkSwitch.Provider>
     
