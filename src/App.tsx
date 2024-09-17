@@ -19,14 +19,16 @@ import { Signer as EvmSigner} from '@reef-chain/evm-provider/Signer'
 import { Provider as ReefProvider } from '@reef-chain/evm-provider/Provider'
 import { Signer, Contract, BigNumber } from 'ethers';
 import { Signer as EtherSigner } from '@ethersproject/abstract-signer'
+import Nav from './components/Nav';
 
 
 export  const convertToReadableFormat = (value) => {
   const decimalValue = BigInt(!!value ? value : 0);
   return decimalValue /BigInt(Math.pow(10, 18));
 };
-export const getDAOToken = (account) => {
-  const contractAddress = '0x9001369C17044CA19b4376182aaD81BBCB01Ba1c'
+export const getDAOToken = (account, network) => {
+  if(network === 'testnet') {
+    const contractAddress = '0x9001369C17044CA19b4376182aaD81BBCB01Ba1c'
   console.log({account: account})
   const contractAbi = 
     [{"type":"constructor","inputs":[{"name":"initialSupply","type":"uint256","internalType":"uint256"}],"stateMutability":"nonpayable"},{"name":"ERC20InsufficientAllowance","type":"error","inputs":[{"name":"spender","type":"address","internalType":"address"},{"name":"allowance","type":"uint256","internalType":"uint256"},{"name":"needed","type":"uint256","internalType":"uint256"}]},{"name":"ERC20InsufficientBalance","type":"error","inputs":[{"name":"sender","type":"address","internalType":"address"},{"name":"balance","type":"uint256","internalType":"uint256"},{"name":"needed","type":"uint256","internalType":"uint256"}]},{"name":"ERC20InvalidApprover","type":"error","inputs":[{"name":"approver","type":"address","internalType":"address"}]},{"name":"ERC20InvalidReceiver","type":"error","inputs":[{"name":"receiver","type":"address","internalType":"address"}]},{"name":"ERC20InvalidSender","type":"error","inputs":[{"name":"sender","type":"address","internalType":"address"}]},{"name":"ERC20InvalidSpender","type":"error","inputs":[{"name":"spender","type":"address","internalType":"address"}]},{"name":"Approval","type":"event","inputs":[{"name":"owner","type":"address","indexed":true,"internalType":"address"},{"name":"spender","type":"address","indexed":true,"internalType":"address"},{"name":"value","type":"uint256","indexed":false,"internalType":"uint256"}],"anonymous":false},{"name":"Transfer","type":"event","inputs":[{"name":"from","type":"address","indexed":true,"internalType":"address"},{"name":"to","type":"address","indexed":true,"internalType":"address"},{"name":"value","type":"uint256","indexed":false,"internalType":"uint256"}],"anonymous":false},{"name":"allowance","type":"function","inputs":[{"name":"owner","type":"address","internalType":"address"},{"name":"spender","type":"address","internalType":"address"}],"outputs":[{"name":"","type":"uint256","internalType":"uint256"}],"stateMutability":"view"},{"name":"approve","type":"function","inputs":[{"name":"spender","type":"address","internalType":"address"},{"name":"value","type":"uint256","internalType":"uint256"}],"outputs":[{"name":"","type":"bool","internalType":"bool"}],"stateMutability":"nonpayable"},{"name":"balanceOf","type":"function","inputs":[{"name":"account","type":"address","internalType":"address"}],"outputs":[{"name":"","type":"uint256","internalType":"uint256"}],"stateMutability":"view"},{"name":"decimals","type":"function","inputs":[],"outputs":[{"name":"","type":"uint8","internalType":"uint8"}],"stateMutability":"view"},{"name":"name","type":"function","inputs":[],"outputs":[{"name":"","type":"string","internalType":"string"}],"stateMutability":"view"},{"name":"symbol","type":"function","inputs":[],"outputs":[{"name":"","type":"string","internalType":"string"}],"stateMutability":"view"},{"name":"totalSupply","type":"function","inputs":[],"outputs":[{"name":"","type":"uint256","internalType":"uint256"}],"stateMutability":"view"},{"name":"transfer","type":"function","inputs":[{"name":"to","type":"address","internalType":"address"},{"name":"value","type":"uint256","internalType":"uint256"}],"outputs":[{"name":"","type":"bool","internalType":"bool"}],"stateMutability":"nonpayable"},{"name":"transferFrom","type":"function","inputs":[{"name":"from","type":"address","internalType":"address"},{"name":"to","type":"address","internalType":"address"},{"name":"value","type":"uint256","internalType":"uint256"}],"outputs":[{"name":"","type":"bool","internalType":"bool"}],"stateMutability":"nonpayable"}]
@@ -37,6 +39,8 @@ export const getDAOToken = (account) => {
  
   // Create contract instance using the Reef signer
   return contract
+  } return undefined
+  
 }
 
 
@@ -88,6 +92,7 @@ function App() {
   const [walletDestination, setWalletDestination] = useState<string | undefined>(undefined)
   const [tokenSymbol, setTokenSymbol] = useState<string | undefined>(undefined)
   const [transactionHash, setTransactionHash] = useState<any | undefined>(undefined)
+  const [switchingNetwork, setSwitchingNetwork] = useState<boolean | undefined>(true)
   const {loading:wcPreloader,setLoading:setWcPreloader} = useWcPreloader()
 
   const {
@@ -101,13 +106,14 @@ function App() {
     setSwitching: (value: boolean) => setSwitching(value, setNetworkSwitching),
   };
   const selectedNetwork = useMemo(() => {
-    const name = network?.name;
-    if (name) {
-      return name  ;   
-    }
-
-    return 'mainnet';
+    if(!!network) {
+      console.log({network})
+      return network.name;
+    } 
+    return undefined;
+    
   }, [network]);
+
   const availableWallOptions = [
     walletSelectorOptions[reefExt.REEF_EXTENSION_IDENT],
     walletSelectorOptions[reefExt.REEF_WALLET_CONNECT_IDENT],
@@ -164,6 +170,7 @@ function App() {
   }
 
   const selectNetwork = (key: 'mainnet' | 'testnet'): void => {
+    setSwitchingNetwork(false);
     const toSelect = appAvailableNetworks.find((item) => item.name === key);
     networkSwitch.setSwitching(true);
     console.log({toSelect})
@@ -171,11 +178,13 @@ function App() {
 
     if (toSelect) {
       reefState.setSelectedNetwork(toSelect);
+      setSwitchingNetwork(true);
     }
   };
 
   const selectAccount = (index: number | null): void => {
     saveSignerLocalPointer(index || 0);
+    console.log({index})
     reefState.setSelectedAddress(index != null ? accounts?.[index].address : undefined);
   };
 
@@ -192,16 +201,16 @@ function App() {
   }*/
 
   const getUserBalance = async (account) => {
-    const contract = getDAOToken(account);
-    const userBalance = await contract.balanceOf(account.evmAddress);
+    const contract = getDAOToken(account, network.name);
+    const userBalance = !!contract && await contract.balanceOf(account.evmAddress);
     console.log({userBalance})
     setUserBalanceERC20(convertToReadableFormat(userBalance._hex))
-    //return convertToReadableFormat(userBalance._hex);
+    
   }
 
   const getTokenSymbol = async (account) => { 
-    const contract = getDAOToken(account);
-    const tokenSymbol = await contract.symbol();
+    const contract = getDAOToken(account, network.name);
+    const tokenSymbol = !!contract && await contract.symbol();
     console.log({tokenSymbol})
     setTokenSymbol(tokenSymbol)
     //return tokenSymbol;
@@ -209,29 +218,14 @@ function App() {
 
 
   const transfert = async (account) => {  
-      const contract = getDAOToken(account);
-      const tx = await contract.transfer(walletDestination, 1000);
+      const contract = getDAOToken(account, network.name);
+      const tx = !!contract && await contract.transfer(walletDestination, 1000);
       setTransactionHash(tx)
       console.log({tx})
   }
 
   return (
     <NetworkSwitch.Provider value={networkSwitch}>
-      
-      
-              {/*
-                !selectedSigner && (
-                  <Uik.Modal
-                title={"Select Wallet"}
-                isOpen={true}
-              >
-                <div style={{"display": "flex", "justifyContent":"space-between"}}>
-                  <Uik.Button onClick={() => connectWallet(reefExt.REEF_EXTENSION_IDENT)} className='connect-button'>Browser Extension</Uik.Button>
-                  <Uik.Button onClick={() => connectWallet(reefExt.REEF_WALLET_CONNECT_IDENT)} className='connect-button'>Wallet Connect</Uik.Button>
-                </div>
-              </Uik.Modal>
-                )
-                */}
 
                 {
                   !selectedSigner && (
@@ -258,36 +252,17 @@ function App() {
                 )
                 */}
               {
-                !!signers && (
+                !!network && (
                   <>
-  <div className='nav-content navigation d-flex d-flex-space-between'>
-                    
-                    <div className='navigation__wrapper'>
-                    <button 
-                      type='button'
-                      className='logo-btn'>
-                      DAOWave
-                    </button>
-                    <nav className="d-flex justify-content-end d-flex-vert-center">
-                    
-                      <Components.AccountSelector 
-                      selExtName={selExtensionName}
-                      availableExtensions={availableWallOptions}
-                      selectExtension={setSelExtensionName}
-                      accounts={accounts || []}
-                      availableNetworks={['mainnet', 'testnet']}
-                      showSnapOptions={true}
-                      selectedSigner={selectedSigner || undefined}
+                    <Nav
+                      accounts={accounts}
+                      selectedSigner={selectedSigner}
+                      selExtensionName={selExtensionName}
+                      availableWallOptions={availableWallOptions}
+                      selectedNetwork={network?.name}
+                      setSelExtensionName={setSelExtensionName}
                       selectAccount={selectAccount}
-                      selectedNetwork={selectedNetwork}
-                      onNetworkSelect={selectNetwork}/>
-                   
-                  
-                </nav>
-                    </div>
-                    
-                    
-                                </div>
+                      selectNetwork={selectNetwork}/>         
 <p>{network.name}</p>
 <p>Contract methods of ERC20 Methods :</p>
 <div>
