@@ -19,7 +19,7 @@ import { Signer as EvmSigner} from '@reef-chain/evm-provider/Signer'
 import { Provider as ReefProvider } from '@reef-chain/evm-provider/Provider'
 import { Signer, Contract, BigNumber } from 'ethers';
 import { Signer as EtherSigner } from '@ethersproject/abstract-signer'
-import Nav from './components/Nav';
+import Nav from './components/Nav/Nav';
 
 
 export  const convertToReadableFormat = (value) => {
@@ -118,6 +118,23 @@ function App() {
     walletSelectorOptions[reefExt.REEF_EXTENSION_IDENT],
     walletSelectorOptions[reefExt.REEF_WALLET_CONNECT_IDENT],
   ]
+
+  useEffect(() => {
+    console.log({loading})
+    if (!loading && isNetworkSwitching) setNetworkSwitching(false);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [loading]);
+
+  useEffect(() => {
+    console.log({error})
+    if(error?.code === 1) { 
+      setSelExtensionName(undefined);
+    }
+    if (selExtensionName === reefExt.REEF_SNAP_IDENT && error?.code === 2) {
+      //history.push(SNAP_URL);
+    }
+  }, [extension, error]);
+
   useEffect(()=>{
     setAccounts([]);
     setSelectedSigner(undefined);
@@ -128,7 +145,7 @@ function App() {
     setAccounts(signers);
     setSelectedSigner(selectedReefSigner);
     setUserBalance(convertToReadableFormat(selectedReefSigner?.balance._hex))
-    getTokenSymbol(selectedReefSigner);
+    //getTokenSymbol(selectedReefSigner);
     reefState.setAccounts(signers)
     //getDAOToken(reefState.signer);
     console.log({signers, balance: selectedReefSigner?.balance, network})
@@ -225,40 +242,58 @@ function App() {
   }
 
   return (
-    <NetworkSwitch.Provider value={networkSwitch}>
-
+    <>
+        {
+          !(!!signers)
+              ?
+              (
+                <>
                 {
-                  !selectedSigner && (
-                    <>
-                    <WalletSelector 
+                  !selExtensionName && (
+<WalletSelector 
                 onExtensionSelect={(extName: string) => onExtensionSelected(extName)} 
                 availableExtensions={availableWallOptions}
               />
-                    </>
-                    
                   )
                 }
-              {
-                !!network && (
-                  <>
+                  <Uik.Modal
+              title={"Connecting to wallet"}
+              isOpen={!!selExtensionName}
+            >
+              <div className="connecting-modal-content">
+                <Uik.Loading />
+                <Uik.Button onClick={() => setSelExtensionName(undefined)}>Cancel connection</Uik.Button>
+              </div>
+            </Uik.Modal>
+                </>
+              ) 
+              :
+              (
+
+                <>
+                 <NetworkSwitch.Provider value={networkSwitch}>
                     <Nav
                       accounts={accounts}
                       selectedSigner={selectedSigner}
                       selExtensionName={selExtensionName}
                       availableWallOptions={availableWallOptions}
-                      selectedNetwork={network?.name}
+                      selectedNetwork={!!network ? network?.name : 'mainnet'}
                       setSelExtensionName={setSelExtensionName}
                       selectAccount={selectAccount}
                       selectNetwork={selectNetwork}/>         
-<p>{network.name}</p>
-<p>Contract methods of ERC20 Methods :</p>
+{
+  !!signers && (
+    <>
+    <p>Contract methods of ERC20 Methods :</p>
 <div>
   <p>Get user balance : </p>
   <button onClick={() => getUserBalance(selectedReefSigner)}>Balance</button>
- 
+  <Uik.Button>
+    Test
+  </Uik.Button>
       <p>{userBalanceERC20?.toString()} {tokenSymbol}</p>
     
-  
+  <Uik.Input></Uik.Input>
 </div>
 
 <div>
@@ -282,16 +317,17 @@ function App() {
         You have sent Successfully !!!
       </p>
     </Uik.Modal>
-  
+    </>
+  )
+}
+
+    </NetworkSwitch.Provider>
 
 </>
-                  
-                  
-                )
-              }
+              )
+        }
+    </>
 
-     
-    </NetworkSwitch.Provider>
     
   );
 }

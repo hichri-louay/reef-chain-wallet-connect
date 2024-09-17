@@ -132,8 +132,6 @@ button:focus {
   font-weight: 900;
   color: #a93185;
   background: linear-gradient(to right, #a93185, #5531a9);
-  -webkit-background-clip: text;
-  -webkit-text-fill-color: transparent;
   display: flex;
   flex-flow: row nowrap;
   justify-content: flex-end;
