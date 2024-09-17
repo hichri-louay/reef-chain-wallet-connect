@@ -123,6 +123,23 @@ button:focus {
 }
 
 
+.load-contract-button {
+  margin-left: 1%;
+}
+
+.load-smart-contracts {
+  display: flex;
+  justify-content: center;
+  width: 30%;
+  margin: 5% auto;
+}
+
+.send-token {
+  display: block;
+  justify-content: center;
+  width: 30%;
+  margin: 5% auto;
+}
 
 .nav-account > div {
   margin: 0 !important;
@@ -132,6 +149,7 @@ button:focus {
   font-weight: 900;
   color: #a93185;
   background: linear-gradient(to right, #a93185, #5531a9);
+  -webkit-background-clip: text;
   display: flex;
   flex-flow: row nowrap;
   justify-content: flex-end;

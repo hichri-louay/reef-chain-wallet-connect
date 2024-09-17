@@ -20,6 +20,7 @@ import { Provider as ReefProvider } from '@reef-chain/evm-provider/Provider'
 import { Signer, Contract, BigNumber } from 'ethers';
 import { Signer as EtherSigner } from '@ethersproject/abstract-signer'
 import Nav from './components/Nav/Nav';
+import ReefContractInteractor from './components/ReefContractInteractor/ReefContractInteractor';
 
 
 export  const convertToReadableFormat = (value) => {
@@ -283,41 +284,7 @@ function App() {
                       selectNetwork={selectNetwork}/>         
 {
   !!signers && (
-    <>
-    <p>Contract methods of ERC20 Methods :</p>
-<div>
-  <p>Get user balance : </p>
-  <button onClick={() => getUserBalance(selectedReefSigner)}>Balance</button>
-  <Uik.Button>
-    Test
-  </Uik.Button>
-      <p>{userBalanceERC20?.toString()} {tokenSymbol}</p>
-    
-  <Uik.Input></Uik.Input>
-</div>
-
-<div>
-  <p>transfert token : </p>
-  <input 
-    onChange={(e) => setWalletDestination(e.target.value)}
-  />
-  <button onClick={() => transfert(selectedReefSigner)}>Send</button>
- 
-      <p>{userBalanceERC20?.toString()} {tokenSymbol}</p>
-    
-  
-</div>
-
-    <Uik.Modal
-      isOpen={!!transactionHash}
-      title='Transaction Sent Successfully'
-      onClose={() => setTransactionHash(undefined)}
-    >
-      <p>
-        You have sent Successfully !!!
-      </p>
-    </Uik.Modal>
-    </>
+    <ReefContractInteractor account={selectedReefSigner}></ReefContractInteractor>
   )
 }
 
