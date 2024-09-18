@@ -12,32 +12,30 @@ module.exports = {
   },
   module: {
     rules: [
-        {
-            test: /\.css$/,
-            use: ['css-loader'],
-    },
+      {
+        test: /\.css$/,
+        use: ['style-loader', 'css-loader'], // Add style-loader here
+      },
       {
         test: /\.tsx?$/,
         exclude: /node_modules/,
         use: {
           loader: 'babel-loader',
-        }
+        },
       },
       {
         test: /\.js?$/,
         exclude: /node_modules/,
         use: {
           loader: 'babel-loader',
-        }
-      }
-    ]
+        },
+      },
+    ],
   },
   plugins: [
     new HtmlWebpackPlugin({
-      template: path.join(__dirname, "public", "index.html"),
-      favicon: path.join(__dirname, "public", "favicon.ico")
+      template: path.join(__dirname, 'public', 'index.html'),
+      favicon: path.join(__dirname, 'public', 'favicon.ico'),
     }),
   ],
 };
-
-
