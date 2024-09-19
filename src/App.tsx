@@ -4,7 +4,6 @@ import Uik from "@reef-chain/ui-kit";
 import { extension as reefExt } from "@reef-chain/util-lib";
 import NetworkSwitch, { setSwitching } from "./context/NetworkSwitch";
 import useWcPreloader from "./hooks/useWcPreloader";
-import { connectWc } from "./utils/walletConnect";
 import "./App.css";
 import useConnectedWallet from "./hooks/useConnectedWallet";
 import { network as nw } from "@reef-chain/util-lib";
