@@ -1,6 +1,6 @@
 import { CoreTypes } from "@walletconnect/types";
 import { Web3Modal } from "@web3modal/standalone";
-import { extension as reefExt, logoSvgUrl } from '@reef-chain/util-lib';
+import { extension as reefExt, logoSvgUrl } from "@reef-chain/util-lib";
 
 const web3Modal = new Web3Modal({
   projectId: reefExt.WC_PROJECT_ID,
@@ -17,14 +17,16 @@ const web3Modal = new Web3Modal({
   },
 });
 
-const appMetadata: CoreTypes.Metadata = { 
-  name: 'Reef App',
-  description: 'Reef App',
+const appMetadata: CoreTypes.Metadata = {
+  name: "Reef App",
+  description: "Reef App",
   url: window.location.origin,
-  icons: [window.location.origin + '/favicon.ico'],
+  icons: [window.location.origin + "/favicon.ico"],
 };
 
-export const connectWc = async (setWcPreloader:any): Promise<reefExt.WcConnection | undefined> => {
+export const connectWc = async (
+  setWcPreloader: any,
+): Promise<reefExt.WcConnection | undefined> => {
   try {
     const client = await reefExt.initWcClient(appMetadata);
 
@@ -35,8 +37,8 @@ export const connectWc = async (setWcPreloader:any): Promise<reefExt.WcConnectio
     if (uri) {
       web3Modal.openModal({ uri });
       setWcPreloader({
-        value:false,
-        message:""
+        value: false,
+        message: "",
       });
     } else {
       throw new Error("_noUriFoundWC");
