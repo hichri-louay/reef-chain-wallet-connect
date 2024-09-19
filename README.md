@@ -1,4 +1,3 @@
-cat << 'EOF' > README.md
 # Implementing Reef Chain Wallet Connection in a React App
 
 This guide will walk you through the process of integrating Reef Chain wallet connection features into a React application using the `@reef-chain/react-lib` library. You will learn how to:
@@ -227,6 +226,3 @@ src/
 3. **Smart Contract Interaction Failing:** Verify the contract address and ABI, and ensure the selected network matches the contract's deployment network.
 
 ## Conclusion
-
-You have now set up a React application that connects to the Reef Chain wallet, switches networks, and interacts with smart contracts. Feel free to customize and extend the implementation based on your requirements.
-EOF
