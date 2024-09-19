@@ -4,6 +4,7 @@
   "private": true,
   "dependencies": {
     "@ethersproject/abstract-signer": "^5.7.0",
+    "@polkadot/api": "^10.11.2",
     "@reef-chain/evm-provider": "^2.0.3",
     "@reef-chain/react-lib": "^4.0.5",
     "@reef-chain/ui-kit": "^3.0.2",
