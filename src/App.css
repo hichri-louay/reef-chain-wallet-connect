@@ -66,6 +66,110 @@
   color: #b2b0c8;
 }
 
+.activity-item--send .activity-item__indicator {
+  background-color: hsla( var(--border-color-dark--h), var(--border-color-dark--s), var(--border-color-dark--l), 0.55 );
+  color: #b2b0c8;
+}
+
+
+.activity-item__date {
+  font-size: 0.813rem;
+  line-height: 1.1;
+  font-weight: 500;
+  color: hsla( var(--text--h), var(--text--s), var(--text--l), 0.8 );
+  display: block;
+  white-space: nowrap;
+  text-overflow: ellipsis;
+  overflow: hidden;
+  max-width: 15rem;
+  margin-top: 0.313rem;
+}
+
+
+.activity-item__title {
+  font-size: 0.938rem;
+  line-height: 1.1;
+  font-weight: 600;
+  color: var(--text);
+  display: block;
+  white-space: nowrap;
+  text-overflow: ellipsis;
+  overflow: hidden;
+  max-width: 15rem;
+}
+
+.activity-item {
+  display: flex;
+  flex-flow: row nowrap;
+  justify-content: flex-start;
+  align-items: center;
+  width: 100%;
+  padding: 0.938rem;
+  transition: all 0.125s;
+  text-decoration: none;
+  position: relative;
+  border-bottom: solid 1px transparent;
+}
+
+
+.activity-item__info {
+  display: flex;
+  flex-flow: column nowrap;
+  justify-content: center;
+  align-items: flex-start;
+}
+
+
+.activity-item--send .activity-item__indicator {
+  background-color: hsla(
+    var(--border-color-dark--h),
+    var(--border-color-dark--s),
+    var(--border-color-dark--l),
+    0.55
+  );
+  color: #b2b0c8;
+}
+
+.activity-item--send .activity-item__amount-token-icon {
+  filter: grayscale(0.5);
+  opacity: 0.5;
+}
+
+.activity-item--send .activity-item__amount--hidden div div {
+  background-color: #b2b0c8!important;
+}
+
+.activity-item--send .activity-item__amount {
+  color: #b2b0c8;
+}
+
+
+
+.activity-item--send .activity-item__indicator-icon {
+  transform: rotate(-135deg);
+}
+
+
+.activity-item__indicator {
+  height: 2.875rem;
+  width: 2.875rem;
+  min-width: 2.875rem;
+  border-radius: 12px;
+  display: flex;
+  flex-flow: row nowrap;
+  justify-content: center;
+  align-items: center;
+}
+.activity-item__content {
+  flex-grow: 1;
+  display: flex;
+  flex-flow: row nowrap;
+  justify-content: space-between;
+  align-items: center;
+  margin-left: 0.938rem;
+  padding-right: 0.625rem;
+}
+
 .card {
   position: relative;
   display: flex;

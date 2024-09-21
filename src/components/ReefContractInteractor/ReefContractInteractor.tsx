@@ -15,10 +15,9 @@ const ReefContractInteractor = ({ account, network }) => {
   const [amount, setAmount] = useState<string>("");
   const [loadingSmartContract, setLoadingSmartContract] = useState<boolean>(false);
   const [apiPromise, setApiPromise] = useState<ApiPromise | null>(null);
-  const [unparsedTransfers, loading] :[tokenUtil.TokenTransfer[], boolean] = hooks.useTxHistory();
 
   useEffect(() => {
-    console.log({network, account, unparsedTransfers})
+    console.log({network, account})
     initializeState();
     const initApi = async () => {
       try {
@@ -29,9 +28,8 @@ const ReefContractInteractor = ({ account, network }) => {
         console.error("Error initializing API", err);
       }
     };
-    const parsedTx = parsedTransfers();
-    const filter = unparsedTransfers.filter((transfer) => { console.log({transfer}) });
-    console.log({parsedTx, filter})
+    
+    
     initApi();
 
     return () => {
@@ -39,33 +37,11 @@ const ReefContractInteractor = ({ account, network }) => {
         apiPromise.disconnect();
       }
     };
-  }, [account, network, unparsedTransfers]);
+  }, [account, network]);
 
   const smartContract = () => {
     return new Contract(smartContractAddress, erc20, account.signer);
   };
-
-
-  const parsedTransfers = () => {
-    if(unparsedTransfers.length > 0) {
-      return unparsedTransfers.filter((transfer) => 
-        transfer.reefswapAction === null && 
-        transfer.inbound === false &&
-        transfer.type === "ERC20"
-      ).map((transaction) => { 
-        console.log({transaction}) 
-        const isSend = account.address === transaction.from;
-        return {
-          type: isSend ? 'send' : 'receive',
-          timestamp: transaction.timestamp,
-          status: transaction.success ? 'Success' : 'Failed',
-          tokenName: transaction.token.name,
-          tokenSymbol: transaction.token.symbol,
-          url: transaction.url,
-        }
-      });
-    } return []
-  }
 
   const initializeState = () => {
     setTokenName(""); 
@@ -162,7 +138,7 @@ const ReefContractInteractor = ({ account, network }) => {
 
 
   return (
-    
+
     <div className="interaction-components">
       <div className="load-smart-contracts">
         <Uik.Input
@@ -202,24 +178,6 @@ const ReefContractInteractor = ({ account, network }) => {
         loadingSmartContract && (
           
           <Uik.Loading></Uik.Loading>
-        )
-      }
-
-      {
-        unparsedTransfers.length > 0 && (
-          <div className="col-12 card  card-bg-light">
-            {
-              parsedTransfers().map((transfer, index) => {
-                return (
-                  <ActivityItem
-                  activity={transfer}
-                  index={index}
-                  />
-                )
-              })
-            }
-          </div>
-          
         )
       }
     </div>

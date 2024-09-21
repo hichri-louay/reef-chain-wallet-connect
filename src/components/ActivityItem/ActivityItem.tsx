@@ -26,24 +26,26 @@ const ActivityItem = ({ activity, index }) => {
       } 
     return (
         <>
-        {
-            activity && (
-                <>
-                            <div key={activity.timestamp + index.toString()} className="activity-item" onClick={reefExplorer}>
-                            <div className="activity-item__indicator">
-          <Uik.Icon className="activity-item__indicator-icon" icon={faArrowDown} />
-        </div>
-                                <div className="activity-item__from">{activity.type === 'send' ? 'Sent' : 'Received'} {activity.tokenSymbol}</div>
-                                <div className="activity-item__timestamp">{formatTimestamp(activity.timestamp)}</div>
-                                
-                                <div className="activity-item__inbound">{activity.inbound}</div>
-                                <div className="activity-item__type">{activity.type}</div>
-                            </div>
-                        
+        <div key={activity.timestamp + index.toString()}>
+            <div className="activity-item activity-item--send">
+                <div className="activity-item__indicator">
+                <Uik.Icon className="activity-item__indicator-icon" icon={faArrowDown} />
+                </div>
 
-                </>
-            )
-        }
+                <div className="activity-item__content">
+                    <div className="activity-item__info">
+                        <div className="activity-item__title">
+                        {activity.type === 'send' ? 'Sent' : 'Received'} {activity.tokenSymbol}
+                        </div>
+
+                        <div className="activity-item__date">
+                        {formatTimestamp(activity.timestamp)}
+                        </div>
+
+                    </div>
+                </div>
+            </div>
+        </div>
         </>
         
     )
