@@ -1,6 +1,6 @@
-import React from 'react';
-import { Components } from '@reef-chain/react-lib';
-import Uik from '@reef-chain/ui-kit';
+import React from "react";
+import { Components } from "@reef-chain/react-lib";
+import Uik from "@reef-chain/ui-kit";
 
 const Nav = ({
   accounts,
@@ -13,12 +13,12 @@ const Nav = ({
   selectNetwork,
 }) => {
   return (
-    <div className='nav-content navigation d-flex d-flex-space-between'>
-      <div className='navigation__wrapper'>
-        <button type='button' className='logo-btn'>
+    <div className="nav-content navigation d-flex d-flex-space-between">
+      <div className="navigation__wrapper">
+        <button type="button" className="logo-btn">
           DAOWave
         </button>
-        <nav className='d-flex justify-content-end d-flex-vert-center'>
+        <nav className="d-flex justify-content-end d-flex-vert-center">
           {accounts && (
             <Components.AccountSelector
               selExtName={selExtensionName}
@@ -27,7 +27,7 @@ const Nav = ({
               isBalanceHidden={false}
               showBalance={true}
               accounts={accounts || []}
-              availableNetworks={['mainnet', 'testnet']}
+              availableNetworks={["mainnet", "testnet"]}
               showSnapOptions={true}
               selectedSigner={selectedSigner || undefined}
               selectAccount={selectAccount}

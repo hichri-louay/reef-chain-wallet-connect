@@ -4,6 +4,7 @@
   "private": true,
   "dependencies": {
     "@ethersproject/abstract-signer": "^5.7.0",
+    "@fortawesome/free-solid-svg-icons": "^6.6.0",
     "@polkadot/api": "^10.11.2",
     "@reef-chain/evm-provider": "^2.0.3",
     "@reef-chain/react-lib": "^4.0.5",
@@ -34,12 +35,6 @@
     "test": "react-scripts test",
     "eject": "react-scripts eject"
   },
-  "eslintConfig": {
-    "extends": [
-      "react-app",
-      "react-app/jest"
-    ]
-  },
   "browserslist": {
     "production": [
       ">0.2%",
@@ -56,6 +51,7 @@
     "@babel/plugin-transform-classes": "^7.25.4",
     "@babel/plugin-transform-parameters": "^7.24.7",
     "css-loader": "^7.1.2",
+    "postcss-flexbugs-fixes": "^5.0.2",
     "prettier": "3.3.3",
     "style-loader": "^4.0.0"
   }

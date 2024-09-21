@@ -1,31 +1,37 @@
 import React, { useState, useEffect } from "react";
-import { Components } from "@reef-chain/react-lib";
 import Uik from "@reef-chain/ui-kit";
 import erc20 from "../../abi/erc20.json";
 import { Contract } from "ethers";
-import { transactionUtils } from "@reef-chain/util-lib";
+import { transactionUtils , tokenUtil} from "@reef-chain/util-lib";
 import { ApiPromise, WsProvider } from "@polkadot/api";
+import { TokenWithAmount, hooks } from "@reef-chain/react-lib";
+import ActivityItem from "../ActivityItem/ActivityItem";
 
-const ReefContractInteractor = ({ account }) => {
+const ReefContractInteractor = ({ account, network }) => {
   const [smartContractAddress, setSmartContractAddress] = useState<string>("");
   const [tokenSymbol, setTokenSymbol] = useState<string>("");
   const [tokenName, setTokenName] = useState<string>("");
   const [recipientAddress, setRecipientAddress] = useState<string>("");
   const [amount, setAmount] = useState<string>("");
-
+  const [loadingSmartContract, setLoadingSmartContract] = useState<boolean>(false);
   const [apiPromise, setApiPromise] = useState<ApiPromise | null>(null);
+  const [unparsedTransfers, loading] :[tokenUtil.TokenTransfer[], boolean] = hooks.useTxHistory();
 
   useEffect(() => {
+    console.log({network, account, unparsedTransfers})
+    initializeState();
     const initApi = async () => {
       try {
-        const wsProvider = new WsProvider("wss://rpc-testnet.reefscan.com/ws");
+        const wsProvider = new WsProvider(network.rpcUrl);
         const api = await ApiPromise.create({ provider: wsProvider });
         setApiPromise(api);
       } catch (err) {
         console.error("Error initializing API", err);
       }
     };
-
+    const parsedTx = parsedTransfers();
+    const filter = unparsedTransfers.filter((transfer) => { console.log({transfer}) });
+    console.log({parsedTx, filter})
     initApi();
 
     return () => {
@@ -33,11 +39,42 @@ const ReefContractInteractor = ({ account }) => {
         apiPromise.disconnect();
       }
     };
-  }, []);
+  }, [account, network, unparsedTransfers]);
 
   const smartContract = () => {
     return new Contract(smartContractAddress, erc20, account.signer);
   };
+
+
+  const parsedTransfers = () => {
+    if(unparsedTransfers.length > 0) {
+      return unparsedTransfers.filter((transfer) => 
+        transfer.reefswapAction === null && 
+        transfer.inbound === false &&
+        transfer.type === "ERC20"
+      ).map((transaction) => { 
+        console.log({transaction}) 
+        const isSend = account.address === transaction.from;
+        return {
+          type: isSend ? 'send' : 'receive',
+          timestamp: transaction.timestamp,
+          status: transaction.success ? 'Success' : 'Failed',
+          tokenName: transaction.token.name,
+          tokenSymbol: transaction.token.symbol,
+          url: transaction.url,
+        }
+      });
+    } return []
+  }
+
+  const initializeState = () => {
+    setTokenName(""); 
+    setAmount("");
+    setTokenSymbol("");
+    setRecipientAddress("");
+    setSmartContractAddress("");
+    setLoadingSmartContract(false);
+  }
 
   const send = async () => {
     if (!apiPromise) {
@@ -103,22 +140,26 @@ const ReefContractInteractor = ({ account }) => {
   const loadSmartContract = async () => {
     try {
       if (smartContractAddress !== "") {
+        setLoadingSmartContract(true);
         const contract = smartContract();
         if (contract) {
           const symbol = await contract.symbol();
           const name = await contract.name();
           setTokenName(name);
           setTokenSymbol(symbol);
+          setLoadingSmartContract(false);
           Uik.notify.success("Smart Contract loaded successfully");
         }
       } else {
         Uik.notify.danger("Please enter a valid smart contract address");
       }
     } catch (err) {
-      console.error("Error loading smart contract", err);
+      setLoadingSmartContract(false);
       Uik.notify.danger("Error loading smart contract");
     }
   };
+
+
 
   return (
     <div className="interaction-components">
@@ -155,6 +196,31 @@ const ReefContractInteractor = ({ account }) => {
           </div>
         </div>
       )}
+
+      {
+        loadingSmartContract && (
+          
+          <Uik.Loading></Uik.Loading>
+        )
+      }
+
+      {
+        unparsedTransfers.length > 0 && (
+          <div className="col-12 card  card-bg-light">
+            {
+              parsedTransfers().map((transfer, index) => {
+                return (
+                  <ActivityItem
+                  activity={transfer}
+                  index={index}
+                  />
+                )
+              })
+            }
+          </div>
+          
+        )
+      }
     </div>
   );
 };

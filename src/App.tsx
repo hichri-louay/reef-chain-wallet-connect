@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from "react";
-import { Components, hooks, ReefSigner } from "@reef-chain/react-lib";
+import { Components, hooks, ReefSigner, TokenWithAmount } from "@reef-chain/react-lib";
 import Uik from "@reef-chain/ui-kit";
 import { extension as reefExt } from "@reef-chain/util-lib";
 import NetworkSwitch, { setSwitching } from "./context/NetworkSwitch";
@@ -10,6 +10,7 @@ import { network as nw } from "@reef-chain/util-lib";
 import Nav from "./components/Nav/Nav";
 import ReefContractInteractor from "./components/ReefContractInteractor/ReefContractInteractor";
 import { connectWallet, getIpfsGatewayUrl } from "./utils/walletHelper";
+import { BigNumber, ethers } from "ethers";
 
 function App() {
   const { selExtensionName, setSelExtensionName } = useConnectedWallet();
@@ -39,6 +40,7 @@ function App() {
     isSwitching: isNetworkSwitching,
     setSwitching: (value: boolean) => setSwitching(value, setNetworkSwitching),
   };
+  const tokens = hooks.useObservableState<TokenWithAmount[]|null>(reefState.selectedTokenPrices$, []);
 
   const availableWallOptions = [
     Components.walletSelectorOptions[reefExt.REEF_EXTENSION_IDENT],
@@ -63,7 +65,13 @@ function App() {
     setAccounts(signers);
     setSelectedSigner(selectedReefSigner);
     reefState.setAccounts(signers);
-
+    if(tokens?.length) {
+      tokens.map((token) => {
+        console.log({balance: parseFloat(ethers.utils.formatUnits(token.balance, token.decimals))})
+      })
+    }
+    
+    if(tokens?.length) console.log({tokens: parseFloat(ethers.utils.formatUnits(BigNumber.from(tokens?.[0].balance?._hex), tokens?.[0].decimals)).toFixed(2)})
     if (signers?.length && signers?.indexOf(selectedReefSigner!) == -1) {
       reefState.setSelectedAddress(signers[0].address);
     }
@@ -134,6 +142,7 @@ function App() {
             {!!signers && (
               <ReefContractInteractor
                 account={selectedReefSigner}
+                network={network}
               ></ReefContractInteractor>
             )}
           </NetworkSwitch.Provider>
