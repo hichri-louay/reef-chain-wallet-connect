@@ -27,6 +27,153 @@
   width: 100%;
 }
 
+.token-card__value {
+  -webkit-text-fill-color: transparent;
+  background: -webkit-linear-gradient(0deg,var(--primary),var(--secondary));
+  -webkit-background-clip: text;
+  border: none;
+  font-size: 18px;
+  font-weight: 900;
+  line-height: 1.35;
+}
+
+
+.token-card__info {
+  align-items: flex-start;
+  display: flex;
+  flex-flow: column nowrap;
+  justify-content: center;
+  margin-left: 15px;
+}
+
+
+.uik-button--small .uik-button__icon {
+  width: 0.813rem;
+  height: 0.813rem;
+}
+
+
+
+.uik-button--small {
+  font-size: .813rem;
+  padding: 11px 15px;
+  border-radius: 10px;
+}
+
+.uik-button__text {
+  display: flex;
+  flex-flow: row nowrap;
+  justify-content: center;
+  align-items: center;
+}
+.token-card .uik-button .uik-button__icon {
+  margin-left: -2px;
+}
+.uik-button--small .uik-button__icon {
+  width: 0.813rem;
+  height: 0.813rem;
+}
+
+.token-card__token-price {
+  background: transparent;
+  border: none;
+  color: var(--text);
+  font-size: 13px;
+  font-weight: 500;
+  line-height: 1.35;
+  margin: 0;
+  padding: 0;
+  transition: all .15;
+}
+
+.token-card__token-name {
+  color: var(--text);
+  font-size: 16px;
+  font-weight: 600;
+  line-height: 1.45;
+}
+
+.token-card__token-info {
+  align-items: flex-end;
+  display: flex;
+  flex-flow: row nowrap;
+  justify-content: flex-start;
+  white-space: nowrap;
+}
+
+
+.token-card__image {
+  background-size: cover;
+  border: none;
+  border-radius: 50%;
+  height: 44px;
+  min-height: 44px;
+  min-width: 44px;
+  transition: all .15s;
+  width: 44px;
+}
+
+.token-card__values {
+  align-items: flex-end;
+  display: flex;
+  flex-flow: column nowrap;
+  justify-content: center;
+  margin: 0 25px;
+  text-align: right;
+  white-space: nowrap;
+}
+
+.token-card__amount {
+  background-color: transparent;
+  border: none;
+  color: var(--text);
+  font-size: 13px;
+  font-weight: 500;
+  line-height: 1.35;
+}
+
+
+.dashboard__tokens {
+  width: 100%;
+  margin-top: 60px;
+}
+
+
+.token-card {
+  width: 100%;
+}
+
+
+.token-card__main {
+  align-items: center;
+  display: flex;
+  flex-flow: row nowrap;
+  justify-content: flex-start;
+}
+
+
+.token-card__aside {
+  align-items: center;
+  display: flex;
+  flex-flow: row nowrap;
+  justify-content: flex-end;
+  padding-right: 5px;
+}
+
+
+.token-card__wrapper {
+  align-items: center;
+  background: #fff;
+  border-radius: 15px;
+  box-shadow: var(--shadow);
+  display: flex;
+  flex-flow: row nowrap;
+  justify-content: space-between;
+  margin-bottom: 0.5rem!important;
+  padding: 15px;
+  width: 100%;
+}
+
 
 .dashboard__right {
   flex-basis: 0;

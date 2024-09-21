@@ -12,10 +12,12 @@ import ReefContractInteractor from "./components/ReefContractInteractor/ReefCont
 import { connectWallet, getIpfsGatewayUrl } from "./utils/walletHelper";
 import { BigNumber, ethers } from "ethers";
 import Activity from "./components/Activity/Activity";
+import Tokens from "./components/Tokens/Tokens";
 
 function App() {
   const { selExtensionName, setSelExtensionName } = useConnectedWallet();
   const [accounts, setAccounts] = useState<ReefSigner[]>([]);
+  const [tokenList, setTokenList] = useState([]);
   const [selectedSigner, setSelectedSigner] = useState<ReefSigner | undefined>(
     undefined,
   );
@@ -66,13 +68,7 @@ function App() {
     setAccounts(signers);
     setSelectedSigner(selectedReefSigner);
     reefState.setAccounts(signers);
-    if(tokens?.length) {
-      tokens.map((token) => {
-        console.log({balance: parseFloat(ethers.utils.formatUnits(token.balance, token.decimals))})
-      })
-    }
     
-    if(tokens?.length) console.log({tokens: parseFloat(ethers.utils.formatUnits(BigNumber.from(tokens?.[0].balance?._hex), tokens?.[0].decimals)).toFixed(2)})
     if (signers?.length && signers?.indexOf(selectedReefSigner!) == -1) {
       reefState.setSelectedAddress(signers[0].address);
     }
@@ -146,6 +142,12 @@ function App() {
                   <div className="dashboard__main">
               
               <div className="dashboard__left">
+                {
+                  !!tokens && (
+                    <Tokens tokens={tokens}/>
+                  )
+                }
+                
                 {
                   /*
                   <ReefContractInteractor
