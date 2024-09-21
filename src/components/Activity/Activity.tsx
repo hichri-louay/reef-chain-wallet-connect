@@ -32,7 +32,6 @@ const Activity = (account) => {
               tokenSymbol: transaction.token.symbol,
               url: transaction.url,
               image: transaction.token.iconUrl,
-              //parseFloat(ethers.utils.formatUnits(BigNumber.from(tokens?.[0].balance?._hex), tokens?.[0].decimals)).toFixed(2)
               balance: parseFloat(ethers.utils.formatUnits(transaction.token.balance._hex, transaction.token.decimals)).toFixed(2)
             }
           });

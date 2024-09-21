@@ -146,10 +146,15 @@ function App() {
                   <div className="dashboard__main">
               
               <div className="dashboard__left">
-              <ReefContractInteractor
+                {
+                  /*
+                  <ReefContractInteractor
                 account={selectedReefSigner}
                 network={network}
               ></ReefContractInteractor>
+                  */
+                }
+              
               </div>
               <Activity
                 account={selectedReefSigner}
