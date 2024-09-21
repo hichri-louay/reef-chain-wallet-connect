@@ -141,6 +141,22 @@
   color: var(--success);
 }
 
+.activity-item--send .activity-item__amount {
+  color: #b2b0c8;
+}
+
+
+.activity-item__amount-token-icon {
+  width: 1.125rem;
+  min-width: 1.125rem;
+  height: 1.125rem;
+  border-radius: 50%;
+  overflow: hidden;
+  margin-left: 0.5rem;
+  background-size: cover;
+  background-position: center;
+}
+
 .activity-item--receive .activity-item__indicator-icon {
   transform: rotate(45deg);
 }
@@ -157,7 +173,12 @@
   filter: grayscale(0.5);
   opacity: 0.5;
 }
-
+.activity-item__amount-wrapper {
+  display: flex;
+  flex-flow: row nowrap;
+  justify-content: flex-end;
+  align-items: center;
+}
 .activity-item--send .activity-item__amount--hidden div div {
   background-color: #b2b0c8!important;
 }

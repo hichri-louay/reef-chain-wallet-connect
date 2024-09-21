@@ -1,22 +1,26 @@
 import { faArrowUpRightFromSquare } from "@fortawesome/free-solid-svg-icons";
 import Uik from "@reef-chain/ui-kit";
-import React, { useEffect } from "react";
+import React, { useEffect, useState } from "react";
 import ActivityItem from "../ActivityItem/ActivityItem";
 import { hooks } from "@reef-chain/react-lib";
 import { tokenUtil } from "@reef-chain/util-lib";
 
 const Activity = (account) => {
     const [unparsedTransfers, loading] :[tokenUtil.TokenTransfer[], boolean] = hooks.useTxHistory();
-
+    const [parsedTransfers, setParsedTransfers] = useState<any>([]);
     
+    useEffect(() => { 
+      const parsed = parseTransfers();
+      setParsedTransfers(parsed);
+    }, [account]);
 
-     const parsedTransfers = () => {
+     const parseTransfers = () => {
         if(unparsedTransfers.length > 0) {
           return unparsedTransfers.filter((transfer) => 
             transfer.reefswapAction === null && 
             transfer.inbound === false &&
             transfer.type === "ERC20"
-          ).map((transaction) => { 
+          ).map((transaction) => {
             console.log({transaction}) 
             const isSend = account.address === transaction.from;
             return {
@@ -26,6 +30,7 @@ const Activity = (account) => {
               tokenName: transaction.token.name,
               tokenSymbol: transaction.token.symbol,
               url: transaction.url,
+              image: transaction.token.iconUrl,
             }
           });
         } return []
@@ -43,15 +48,17 @@ const Activity = (account) => {
           />
                 </div>
                 <div className="col-12 card card-bg-light">
-                {
-                parsedTransfers().map((transfer, index) => {
-                    return (
-                  <ActivityItem
-                    activity={transfer}
-                    index={index}
-                  />
+                { parsedTransfers.length > 0 && (
+                    parsedTransfers.map((transfer, index) => {
+                      return (
+                    <ActivityItem
+                      activity={transfer}
+                      index={index}
+                    />
+                  )
+                })
                 )
-              })
+                
             }
                     
                 </div>

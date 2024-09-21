@@ -1,10 +1,11 @@
 import { faArrowDown } from "@fortawesome/free-solid-svg-icons";
+import { utils } from "@reef-chain/react-lib";
 import Uik from "@reef-chain/ui-kit";
 import React, { useEffect } from "react";
 
 
 const ActivityItem = ({ activity, index }) => {
-
+    const { showBalance } = utils;
     useEffect(() => {   console.log({activity})}, []);
 
     const reefExplorer = () => {
@@ -42,6 +43,14 @@ const ActivityItem = ({ activity, index }) => {
                         {formatTimestamp(activity.timestamp)}
                         </div>
 
+                    </div>
+                    <div className="activity-item__amount-wrapper">
+                        <div className="activity-item__amount">
+                            {activity.type === 'send' ? '- ' : '+ '} 
+                        </div>
+                        <div className="activity-item__amount-token-icon" style={{backgroundImage: `url(${activity.image})`}}>
+
+                        </div>
                     </div>
                 </div>
             </div>
