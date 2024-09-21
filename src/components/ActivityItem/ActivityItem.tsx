@@ -46,7 +46,7 @@ const ActivityItem = ({ activity, index }) => {
                     </div>
                     <div className="activity-item__amount-wrapper">
                         <div className="activity-item__amount">
-                            {activity.type === 'send' ? '- ' : '+ '} 
+                            {activity.type === 'send' ? '- ' : '+ '} {activity.balance}
                         </div>
                         <div className="activity-item__amount-token-icon" style={{backgroundImage: `url(${activity.image})`}}>
 

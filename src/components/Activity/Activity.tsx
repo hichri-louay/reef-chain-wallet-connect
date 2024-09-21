@@ -4,6 +4,7 @@ import React, { useEffect, useState } from "react";
 import ActivityItem from "../ActivityItem/ActivityItem";
 import { hooks } from "@reef-chain/react-lib";
 import { tokenUtil } from "@reef-chain/util-lib";
+import { BigNumber, ethers } from "ethers";
 
 const Activity = (account) => {
     const [unparsedTransfers, loading] :[tokenUtil.TokenTransfer[], boolean] = hooks.useTxHistory();
@@ -31,6 +32,8 @@ const Activity = (account) => {
               tokenSymbol: transaction.token.symbol,
               url: transaction.url,
               image: transaction.token.iconUrl,
+              //parseFloat(ethers.utils.formatUnits(BigNumber.from(tokens?.[0].balance?._hex), tokens?.[0].decimals)).toFixed(2)
+              balance: parseFloat(ethers.utils.formatUnits(transaction.token.balance._hex, transaction.token.decimals)).toFixed(2)
             }
           });
         } return []
