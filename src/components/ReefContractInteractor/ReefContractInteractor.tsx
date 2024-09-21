@@ -162,6 +162,7 @@ const ReefContractInteractor = ({ account, network }) => {
 
 
   return (
+    
     <div className="interaction-components">
       <div className="load-smart-contracts">
         <Uik.Input

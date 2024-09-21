@@ -11,6 +11,7 @@ import Nav from "./components/Nav/Nav";
 import ReefContractInteractor from "./components/ReefContractInteractor/ReefContractInteractor";
 import { connectWallet, getIpfsGatewayUrl } from "./utils/walletHelper";
 import { BigNumber, ethers } from "ethers";
+import Activity from "./components/Activity/Activity";
 
 function App() {
   const { selExtensionName, setSelExtensionName } = useConnectedWallet();
@@ -140,10 +141,25 @@ function App() {
               selectNetwork={selectNetwork}
             />
             {!!signers && (
+              <div className="content">
+                  <div className="dashboard">
+                  <div className="dashboard__main">
+              
+              <div className="dashboard__left">
               <ReefContractInteractor
                 account={selectedReefSigner}
                 network={network}
               ></ReefContractInteractor>
+              </div>
+              <Activity
+                account={selectedReefSigner}
+                network={network}
+              ></Activity>
+              </div>
+                  </div>
+              </div>
+              
+              
             )}
           </NetworkSwitch.Provider>
         </>
