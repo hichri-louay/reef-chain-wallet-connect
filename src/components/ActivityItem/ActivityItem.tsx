@@ -27,7 +27,7 @@ const ActivityItem = ({ activity, index }) => {
     return (
         <>
         <div key={activity.timestamp + index.toString()}>
-            <div className="activity-item activity-item--send">
+            <div className={`activity-item ${ activity.type === 'send' ? 'activity-item--send' : 'activity-item--receive'}`}>
                 <div className="activity-item__indicator">
                 <Uik.Icon className="activity-item__indicator-icon" icon={faArrowDown} />
                 </div>

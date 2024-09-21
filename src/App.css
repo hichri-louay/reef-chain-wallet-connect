@@ -130,6 +130,29 @@
   color: #b2b0c8;
 }
 
+
+.activity-item--receive .activity-item__indicator {
+  background-color: hsla(
+    var(--success--h),
+    var(--success--s),
+    var(--success--l),
+    0.2
+  );
+  color: var(--success);
+}
+
+.activity-item--receive .activity-item__indicator-icon {
+  transform: rotate(45deg);
+}
+
+.activity-item--receive .activity-item__amount--hidden div div {
+  background-color: var(--success);
+}
+
+.activity-item--receive .activity-item__amount  {
+  color: var(--success)!important;
+}
+
 .activity-item--send .activity-item__amount-token-icon {
   filter: grayscale(0.5);
   opacity: 0.5;
