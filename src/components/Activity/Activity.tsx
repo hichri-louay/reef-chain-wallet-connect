@@ -3,7 +3,7 @@ import Uik from "@reef-chain/ui-kit";
 import React, { useEffect, useState } from "react";
 import ActivityItem from "../ActivityItem/ActivityItem";
 import { hooks } from "@reef-chain/react-lib";
-import { tokenUtil } from "@reef-chain/util-lib";
+import { reefState, tokenUtil } from "@reef-chain/util-lib";
 import { BigNumber, ethers } from "ethers";
 
 const Activity = (account) => {
@@ -13,17 +13,16 @@ const Activity = (account) => {
     useEffect(() => { 
       const parsed = parseTransfers();
       setParsedTransfers(parsed);
-    }, [account]);
+    }, [reefState, unparsedTransfers]);
 
      const parseTransfers = () => {
         if(unparsedTransfers.length > 0) {
           return unparsedTransfers.filter((transfer) => 
             transfer.reefswapAction === null && 
-            transfer.inbound === false &&
+            
             transfer.type === "ERC20"
           ).map((transaction) => {
-            console.log({transaction}) 
-            const isSend = account.address === transaction.from;
+            const isSend = account.account.address === transaction.from;
             return {
               type: isSend ? 'send' : 'receive',
               timestamp: transaction.timestamp,
